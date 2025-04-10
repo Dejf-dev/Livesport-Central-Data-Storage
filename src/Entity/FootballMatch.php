@@ -21,7 +21,7 @@ class FootballMatch
     #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
     private DateTimeImmutable $matchDate;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private string $stadium;
 
     #[ORM\Column(type: Types::SMALLINT)]
