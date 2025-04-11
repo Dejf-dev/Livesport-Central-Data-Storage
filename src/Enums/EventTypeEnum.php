@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum EventType: string {
+enum EventTypeEnum: string {
     case GOAL = "goal";
     case YELLOW_CARD = "yellow_card";
     case RED_CARD = "red_card";
