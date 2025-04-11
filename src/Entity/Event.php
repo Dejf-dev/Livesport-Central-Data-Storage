@@ -27,21 +27,17 @@ class Event
     #[ORM\Column(type: Types::SMALLINT)]
     private int $minute;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private int $scoreAway;
-
     /**
      * @param string $player
      * @param EventType $eventType
      * @param int $minute
      * @param int $scoreAway
      */
-    public function __construct(string $player, EventType $eventType, int $minute, int $scoreAway)
+    public function __construct(string $player, EventType $eventType, int $minute)
     {
         $this->player = $player;
         $this->eventType = $eventType;
         $this->minute = $minute;
-        $this->scoreAway = $scoreAway;
     }
 
     public function getId(): ?int
@@ -84,18 +80,4 @@ class Event
 
         return $this;
     }
-
-    public function getScoreAway(): int
-    {
-        return $this->scoreAway;
-    }
-
-    public function setScoreAway(int $scoreAway): self
-    {
-        $this->scoreAway = $scoreAway;
-
-        return $this;
-    }
-
-
 }
