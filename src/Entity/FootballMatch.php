@@ -31,11 +31,11 @@ class FootballMatch
     private int $scoreAway;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: "team_id",referencedColumnName: "team_id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(name: "home_team_id",referencedColumnName: "team_id", nullable: false, onDelete: "CASCADE")]
     private Team $homeTeam;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name: "team_id",referencedColumnName: "team_id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(name: "away_team_id",referencedColumnName: "team_id", nullable: false, onDelete: "CASCADE")]
     private Team $awayTeam;
 
     /**

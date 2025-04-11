@@ -2,7 +2,7 @@
 
 namespace App\Form\Request;
 
-use App\Enums\EventType;
+use App\Enums\EventTypeEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class EventRequest
@@ -21,9 +21,9 @@ class EventRequest
 
     #[Assert\PositiveOrZero(message: 'Minute must be positive or zero!')]
     #[Assert\Range(
+        notInRangeMessage: 'Minute must be in range from 0 to 120!',
         min: 0,
         max: 120,
-        notInRangeMessage: 'Minute must be in range from 0 to 120!',
     )]
     public int $minute;
 
@@ -35,6 +35,6 @@ class EventRequest
 
     private static function getPossibleEventTypeValues(): array
     {
-        return array_column(EventType::cases(), 'value');
+        return array_column(EventTypeEnum::cases(), 'value');
     }
 }
