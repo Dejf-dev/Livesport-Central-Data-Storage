@@ -68,7 +68,6 @@ class EventService
         try {
             $this->entityManager->flush();
         } catch (Throwable $e) {
-            $this->entityManager->rollback();
             throw $e;
         }
 

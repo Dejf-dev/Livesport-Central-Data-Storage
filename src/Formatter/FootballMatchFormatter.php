@@ -10,7 +10,7 @@ class FootballMatchFormatter
     {
         return [
             'match_id' => $match->getId(),
-            'match_date' => $match->getMatchDate()->format('Y-m-d'),
+            'match_date' => $match->getMatchDate()->format(MATCH_DATE_FORMAT),
             'stadium' => $match->getStadium(),
             'score_home' => $match->getScoreHome(),
             'score_away' => $match->getScoreAway(),
