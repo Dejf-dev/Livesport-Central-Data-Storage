@@ -18,16 +18,16 @@ class FootballMatch
     #[ORM\Column(name: "match_id", type: Types::BIGINT)]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE)]
+    #[ORM\Column(name: 'match_date', type: Types::DATETIMETZ_IMMUTABLE)]
     private DateTimeImmutable $matchDate;
 
     #[ORM\Column(type: Types::STRING, length: 100)]
     private string $stadium;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(name: 'score_home', type: Types::SMALLINT)]
     private int $scoreHome;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(name: 'score_away', type: Types::SMALLINT)]
     private int $scoreAway;
 
     #[ORM\ManyToOne]

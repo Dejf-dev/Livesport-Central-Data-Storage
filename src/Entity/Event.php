@@ -21,7 +21,7 @@ class Event
     #[ORM\Column(type: Types::STRING, length: 100)]
     private string $player;
 
-    #[ORM\Column(enumType: EventTypeEnum::class)]
+    #[ORM\Column(name: 'event_type', type: Types::STRING, length: 30)]
     private EventTypeEnum $eventType;
 
     #[ORM\Column(type: Types::SMALLINT)]
