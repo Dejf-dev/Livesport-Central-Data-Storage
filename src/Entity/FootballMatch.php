@@ -132,4 +132,14 @@ class FootballMatch
 
         return $this;
     }
+
+    public function incrementScoreHome(): void
+    {
+        $this->scoreHome++;
+    }
+
+    public function incrementScoreAway(): void
+    {
+        $this->scoreAway++;
+    }
 }

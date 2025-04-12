@@ -21,9 +21,9 @@ class EventRequest
 
     #[Assert\PositiveOrZero(message: 'Minute must be positive or zero!')]
     #[Assert\Range(
-        notInRangeMessage: 'Minute must be in range from 0 to 120!',
+        notInRangeMessage: 'Minute must be in range from 0 to 90!',
         min: 0,
-        max: 120,
+        max: 90,
     )]
     public int $minute;
 
