@@ -6,134 +6,113 @@ use App\Form\EventType;
 use App\Formatter\EventFormatter;
 use App\Service\EventService;
 use App\Service\FootballMatchService;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\View\View;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-final class EventController extends AbstractFOSRestController
+#[Route(path: '/matches/{matchId}/events', requirements: ['matchId' => '\d+'])]
+final class EventController extends AbstractController
 {
-
-
     public function __construct(
-        private EventService $eventService,
-        private EventFormatter $eventFormatter,
-        private FootballMatchService $footballMatchService
+        private readonly EventService $eventService,
+        private readonly EventFormatter $eventFormatter,
+        private readonly FootballMatchService $footballMatchService
     ) {}
 
-    #[Rest\Get(
-        path: "/matches/{matchId}/events/{eventId}",
-        name: "getEventOfMatch",
-        requirements: ["matchId" => "\d+", "eventId" => "\d+"]
-    )]
-    public function getEventOfMatch(int $matchId, int $eventId): View
+    #[Route(path: '/{eventId}', name: 'getEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['GET'])]
+    public function getEventOfMatch(int $matchId, int $eventId): JsonResponse
     {
         $match = $this->footballMatchService->getMatchById($matchId);
         $event = $this->eventService->getEventById($eventId);
 
         if ($match === null || $event === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->eventFormatter->format($event);
-        return $this->view($result, Response::HTTP_OK);
+        return $this->json($result, Response::HTTP_OK);
     }
 
-    #[Rest\Get(
-        path: "/matches/{matchId}/events",
-        name: "getEventsOfMatch",
-        requirements: ["matchId" => "\d+"]
-    )]
-    public function getEventsOfMatch(int $matchId): View
+    #[Route(path: '', name: 'getEventsOfMatch', methods: ['GET'])]
+    public function getEventsOfMatch(int $matchId): JsonResponse
     {
         $match = $this->footballMatchService->getMatchById($matchId);
 
         if ($match === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
         $events = $this->eventService->getAllEvents();
 
         $result = $this->eventFormatter->formatMany($events);
-        return $this->view($result, Response::HTTP_OK);
+        return $this->json($result, Response::HTTP_OK);
     }
 
-    #[Rest\Post(
-        path: "/matches/{matchId}/events",
-        name: "createEventToMatch",
-        requirements: ["matchId" => "\d+"]
-    )]
-    public function createEventToMatch(Request $request, int $matchId): View
+    #[Route(path: '', name: 'createEventToMatch', methods: ['POST'])]
+    public function createEventToMatch(Request $request, int $matchId): JsonResponse
     {
         $form = $this->createForm(EventType::class);
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
-            return $this->view($form->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
         }
 
         $match = $this->footballMatchService->getMatchById($matchId);
         if ($match === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
         $formRequest = $form->getData();
         $event = $this->eventService->create($formRequest, $match);
         if ($event === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->eventFormatter->format($event);
-        return $this->view($result, Response::HTTP_CREATED);
+        return $this->json($result, Response::HTTP_CREATED);
     }
 
-    #[Rest\Put(
-        path: "/matches/{matchId}/events/{eventId}",
-        name: "updateEventOfMatch",
-        requirements: ["matchId" => "\d+", "eventId" => "\d+"]
-    )]
-    public function updateEventOfMatch(Request $request, int $matchId, int $eventId): View
+    #[Route(path: '/{eventId}', name: 'updateEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['PUT'])]
+    public function updateEventOfMatch(Request $request, int $matchId, int $eventId): JsonResponse
     {
         $form = $this->createForm(EventType::class);
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
-            return $this->view($form->getErrors(), Response::HTTP_BAD_REQUEST);
+            return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
         }
 
         $match = $this->footballMatchService->getMatchById($matchId);
         $event = $this->eventService->getEventById($eventId);
         if ($match === null || $event === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
         $formRequest = $form->getData();
         $newEvent = $this->eventService->update($formRequest, $event, $match);
 
         if ($newEvent === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
-        return $this->view(statusCode: Response::HTTP_NO_CONTENT);
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Rest\Delete(
-        path: "/matches/{matchId}/events/{eventId}",
-        name: "deleteEventOfMatch",
-        requirements: ["matchId" => "\d+", "eventId" => "\d+"]
-    )]
-    public function deleteEventOfMatch(int $matchId, int $eventId): View
+    #[Route(path: '/{eventId}', name: 'deleteEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['DELETE'])]
+    public function deleteEventOfMatch(int $matchId, int $eventId): JsonResponse
     {
         $match = $this->footballMatchService->getMatchById($matchId);
         $event = $this->eventService->getEventById($eventId);
 
         if ($match === null || $event === null) {
-            return $this->view(statusCode: Response::HTTP_NOT_FOUND);
+            return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
         $this->eventService->delete($event);
 
-        return $this->view(Response::HTTP_NO_CONTENT);
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }
