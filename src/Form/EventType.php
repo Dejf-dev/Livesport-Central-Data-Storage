@@ -17,8 +17,7 @@ class EventType extends AbstractType
             ->add('player', TextType::class, ['property_path' => 'player'])
             ->add('event_type', TextType::class, ['property_path' => 'eventType'])
             ->add('minute', IntegerType::class, ['property_path' => 'minute'])
-            ->add('team_id', IntegerType::class, ['property_path' => 'teamId'])
-            ->add('match_id', IntegerType::class, ['property_path' => 'matchId']);
+            ->add('team_id', IntegerType::class, ['property_path' => 'teamId']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

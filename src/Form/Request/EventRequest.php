@@ -30,9 +30,6 @@ class EventRequest
     #[Assert\Positive(message: 'Team ID must be positive!')]
     public int $teamId;
 
-    #[Assert\Positive(message: 'Match ID must be positive!')]
-    public int $matchId;
-
     private static function getPossibleEventTypeValues(): array
     {
         return array_column(EventTypeEnum::cases(), 'value');

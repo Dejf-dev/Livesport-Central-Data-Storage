@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Event;
+use App\Entity\FootballMatch;
 use App\Enums\EventTypeEnum;
 use App\Form\Request\EventRequest;
 use App\Repository\EventRepository;
@@ -28,11 +29,10 @@ class EventService
         return $this->eventRepository->findAll();
     }
 
-    public function create(EventRequest $request): ?Event {
+    public function create(EventRequest $request, FootballMatch $match): ?Event {
         $team = $this->teamService->getTeamById($request->teamId);
-        $match = $this->footballMatchService->getMatchById($request->matchId);
 
-        if ($match === null || $team === null) {
+        if ($team === null) {
             return null;
         }
 
@@ -51,11 +51,10 @@ class EventService
         return $event;
     }
 
-    public function update(EventRequest $request, Event $event): ?Event {
+    public function update(EventRequest $request, Event $event, FootballMatch $match): ?Event {
         $team = $this->teamService->getTeamById($request->teamId);
-        $match = $this->footballMatchService->getMatchById($request->matchId);
 
-        if ($match === null || $team === null) {
+        if ($team === null) {
             return null;
         }
 
