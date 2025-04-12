@@ -43,7 +43,6 @@ class Team
         $this->stadium = $stadium;
     }
 
-
     public function getId(): ?int
     {
         return $this->id;

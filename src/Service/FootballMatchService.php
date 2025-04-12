@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Constants\Constants;
 use App\Entity\FootballMatch;
 use App\Form\Request\FootballMatchRequest;
 use App\Repository\FootballMatchRepository;
@@ -34,7 +35,7 @@ class FootballMatchService
             return null;
         }
 
-        $match = new FootballMatch(DateTimeImmutable::createFromFormat(MATCH_DATE_FORMAT, $request->matchDate),
+        $match = new FootballMatch(DateTimeImmutable::createFromFormat(Constants::MATCH_DATE_FORMAT, $request->matchDate),
                                    $request->stadium, $request->scoreHome, $request->scoreAway, $homeTeam, $awayTeam);
 
         $this->entityManager->beginTransaction();
@@ -58,7 +59,7 @@ class FootballMatchService
             return null;
         }
 
-        $match->setMatchDate(DateTimeImmutable::createFromFormat(MATCH_DATE_FORMAT, $request->matchDate));
+        $match->setMatchDate(DateTimeImmutable::createFromFormat(Constants::MATCH_DATE_FORMAT, $request->matchDate));
         $match->setStadium($request->stadium);
         $match->setScoreHome($request->scoreHome);
         $match->setScoreAway($request->scoreAway);
