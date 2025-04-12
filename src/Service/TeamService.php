@@ -24,6 +24,11 @@ class TeamService
         return $this->teamRepository->findAll();
     }
 
+    public function getCountOfMatches(): int
+    {
+        return $this->teamRepository->findCountOfTeams();
+    }
+
     public function create(TeamRequest $request): ?Team {
         $team = new Team($request->name, $request->city, $request->founded, $request->stadium);
 

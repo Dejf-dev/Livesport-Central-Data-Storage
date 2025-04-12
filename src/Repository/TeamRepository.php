@@ -26,4 +26,12 @@ class TeamRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(["id" => $id]);
     }
+
+    public function findCountOfTeams(): int
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
