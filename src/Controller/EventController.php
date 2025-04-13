@@ -25,7 +25,7 @@ final class EventController extends AbstractController
     public function getEventOfMatch(int $matchId, int $eventId): JsonResponse
     {
         $match = $this->footballMatchService->getMatchById($matchId);
-        $event = $this->eventService->getEventById($eventId);
+        $event = $this->eventService->getEventByMatchIdAndEventId($matchId, $eventId);
 
         if ($match === null || $event === null) {
             return $this->json(null, Response::HTTP_NOT_FOUND);
@@ -44,7 +44,7 @@ final class EventController extends AbstractController
             return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
-        $events = $this->eventService->getAllEvents();
+        $events = $this->eventService->getAllEventsByMatchId($matchId);
 
         $result = $this->eventFormatter->formatMany($events);
         return $this->json($result, Response::HTTP_OK);
@@ -86,7 +86,7 @@ final class EventController extends AbstractController
         }
 
         $match = $this->footballMatchService->getMatchById($matchId);
-        $event = $this->eventService->getEventById($eventId);
+        $event = $this->eventService->getEventByMatchIdAndEventId($matchId, $eventId);
         if ($match === null || $event === null) {
             return $this->json(null, Response::HTTP_NOT_FOUND);
         }
@@ -105,7 +105,7 @@ final class EventController extends AbstractController
     public function deleteEventOfMatch(int $matchId, int $eventId): JsonResponse
     {
         $match = $this->footballMatchService->getMatchById($matchId);
-        $event = $this->eventService->getEventById($eventId);
+        $event = $this->eventService->getEventByMatchIdAndEventId($matchId, $eventId);
 
         if ($match === null || $event === null) {
             return $this->json(null, Response::HTTP_NOT_FOUND);

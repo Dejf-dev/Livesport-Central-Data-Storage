@@ -15,7 +15,6 @@ class EventService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly EventRepository $eventRepository,
-        private readonly FootballMatchService $footballMatchService,
         private readonly TeamService $teamService,
     ) {}
 
@@ -27,6 +26,16 @@ class EventService
     public function getAllEvents(): array
     {
         return $this->eventRepository->findAll();
+    }
+
+    public function getAllEventsByMatchId(int $matchId): array
+    {
+        return $this->eventRepository->findAllByMatchId($matchId);
+    }
+
+    public function getEventByMatchIdAndEventId(int $matchId, int $eventId): ?Event
+    {
+        return $this->eventRepository->findByMatchIdAndEventId($matchId, $eventId);
     }
 
     public function create(EventRequest $request, FootballMatch $match): ?Event {

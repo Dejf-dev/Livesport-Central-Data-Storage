@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,5 +25,31 @@ class EventRepository extends ServiceEntityRepository
     public function findById(int $id): ?Event
     {
         return $this->findOneBy(["id" => $id]);
+    }
+
+    public function findAllByMatchId(int $matchId): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e')
+            ->join('e.match', 'm')
+            ->where('m.id = :val')
+            ->setParameter('val', $matchId)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function findByMatchIdAndEventId(int $matchId, int $eventId): ?Event
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e')
+            ->join('e.match', 'm')
+            ->where('m.id = :matchId')
+            ->andWhere('e.id = :eventId')
+            ->setParameter('matchId', $matchId)
+            ->setParameter('eventId', $eventId);
+
+        /** @var ?Event $res */
+        $res = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
+        return $res;
     }
 }
