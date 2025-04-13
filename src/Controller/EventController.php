@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Event;
 use App\Form\EventType;
 use App\Formatter\EventFormatter;
 use App\Service\EventService;
@@ -44,6 +45,7 @@ final class EventController extends AbstractController
             return $this->json(null, Response::HTTP_NOT_FOUND);
         }
 
+        /** @var Event[] $events */
         $events = $this->eventService->getAllEventsByMatchId($matchId);
 
         $result = $this->eventFormatter->formatMany($events);

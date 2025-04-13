@@ -29,13 +29,15 @@ class EventRepository extends ServiceEntityRepository
 
     public function findAllByMatchId(int $matchId): array
     {
-        return $this->createQueryBuilder('e')
+        $qb = $this->createQueryBuilder('e')
             ->select('e')
             ->join('e.match', 'm')
             ->where('m.id = :val')
-            ->setParameter('val', $matchId)
-            ->getQuery()
-            ->getArrayResult();
+            ->setParameter('val', $matchId);
+
+        /** @var Event[] $res */
+        $res = $qb->getQuery()->getResult();
+        return $res;
     }
 
     public function findByMatchIdAndEventId(int $matchId, int $eventId): ?Event
