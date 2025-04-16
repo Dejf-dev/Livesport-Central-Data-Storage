@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Event;
+use App\Form\Request\EventRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,17 +34,8 @@ class EventType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Event::class,
+            'data_class' => EventRequest::class,
+            'csrf_protection' => false
         ]);
-    }
-
-    /**
-     * Returns the name of the associated entity class.
-     *
-     * @return string The entity class name.
-     */
-    protected function getEntityName(): string
-    {
-        return Event::class;
     }
 }

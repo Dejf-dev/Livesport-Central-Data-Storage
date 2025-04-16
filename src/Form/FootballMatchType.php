@@ -3,10 +3,9 @@
 namespace App\Form;
 
 use App\Entity\FootballMatch;
-use App\Entity\Team;
-use Doctrine\DBAL\Types\IntegerType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\Request\FootballMatchRequest;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,17 +37,8 @@ class FootballMatchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => FootballMatch::class,
+            'data_class' => FootballMatchRequest::class,
+            'csrf_protection' => false
         ]);
-    }
-
-    /**
-     * Returns the name of the associated entity class.
-     *
-     * @return string The entity class name.
-     */
-    protected function getEntityName(): string
-    {
-        return FootballMatch::class;
     }
 }

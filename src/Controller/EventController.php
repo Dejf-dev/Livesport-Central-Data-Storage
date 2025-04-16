@@ -80,8 +80,9 @@ final class EventController extends AbstractController
     #[Route(path: '', name: 'createEventToMatch', methods: ['POST'])]
     public function createEventToMatch(Request $request, int $matchId): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(EventType::class);
-        $form->submit($request->request->all());
+        $form->submit($data);
 
         if (!$form->isValid()) {
             return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
@@ -113,8 +114,9 @@ final class EventController extends AbstractController
     #[Route(path: '/{eventId}', name: 'updateEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['PUT'])]
     public function updateEventOfMatch(Request $request, int $matchId, int $eventId): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(EventType::class);
-        $form->submit($request->request->all());
+        $form->submit($data);
 
         if (!$form->isValid()) {
             return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);

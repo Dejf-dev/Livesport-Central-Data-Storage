@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Team;
+use App\Form\Request\TeamRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,17 +34,8 @@ class TeamType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Team::class,
+            'data_class' => TeamRequest::class,
+            'csrf_protection' => false
         ]);
-    }
-
-    /**
-     * Returns the name of the associated entity class.
-     *
-     * @return string The entity class name.
-     */
-    protected function getEntityName(): string
-    {
-        return Team::class;
     }
 }

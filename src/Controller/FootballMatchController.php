@@ -66,8 +66,9 @@ final class FootballMatchController extends AbstractController
     #[Route(path: '', name: 'createMatch', methods: ['POST'])]
     public function createMatch(Request $request): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(FootballMatchType::class);
-        $form->submit($request->request->all());
+        $form->submit($data);
 
         if (!$form->isValid()) {
             return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
@@ -94,8 +95,9 @@ final class FootballMatchController extends AbstractController
     #[Route(path: '/{matchId}', name: 'updateMatch', requirements: ['matchId' => '\d+'], methods: ['PUT'])]
     public function updateMatch(Request $request, int $matchId): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(FootballMatchType::class);
-        $form->submit($request->request->all());
+        $form->submit($data);
 
         if (!$form->isValid()) {
             return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);

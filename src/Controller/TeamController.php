@@ -66,8 +66,9 @@ final class TeamController extends AbstractController
     #[Route(path: '', name: 'createTeam', methods: ['POST'])]
     public function createTeam(Request $request): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(TeamType::class);
-        $form->submit($request->request->all());
+        $form->submit($data);
 
         if (!$form->isValid()) {
             return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
@@ -90,8 +91,9 @@ final class TeamController extends AbstractController
     #[Route(path: '/{teamId}', name: 'updateTeam', requirements: ['teamId' => '\d+'], methods: ['PUT'])]
     public function updateTeam(Request $request, int $teamId): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         $form = $this->createForm(TeamType::class);
-        $form->submit($request->request->all());
+        $form->submit($data);
 
         if (!$form->isValid()) {
             return $this->json(['errors' => (string) $form->getErrors(true, false)], Response::HTTP_BAD_REQUEST);
