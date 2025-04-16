@@ -229,7 +229,7 @@ class SimulateMatchCommand extends Command
             // checks if player plays
             if ($player->getExclusionMinute() > $rndMinute && $player->getMinuteOnBench() > $rndMinute) {
                 $events[] = new Event($player->getName(), EventTypeEnum::GOAL, $rndMinute, $player->getTeam(), $match);
-                $player->getTeam() === $homeTeam ? $match->incrementScoreAway() : $match->incrementScoreHome();
+                $player->getTeam() === $homeTeam ? $match->incrementScoreHome() : $match->incrementScoreAway();
             }
         }
         // mandatory yellow card
