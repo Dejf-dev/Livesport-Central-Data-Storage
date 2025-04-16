@@ -28,6 +28,19 @@ class TeamFormatter
     }
 
     /**
+     * Formats a Team object as a shorter response than original.
+     * @param Team $team The Team object to format
+     * @return array<string, int|string|null> The formatted array of the Team object
+     */
+    public function formatShort(Team $team): array
+    {
+        return [
+            'team_id' => $team->getId(),
+            'name' => $team->getName(),
+        ];
+    }
+
+    /**
      * Formats Team objects as a response.
      * @param Team[] $teams Team objects to format
      * @return array<array<string, int|string|null>> The array of formatted arrays of the Team object

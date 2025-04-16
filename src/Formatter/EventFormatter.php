@@ -11,6 +11,11 @@ use App\Entity\Event;
  */
 class EventFormatter
 {
+    public function __construct(
+        private readonly TeamFormatter $teamFormatter,
+    ) {}
+
+
     /**
      * Formats a Event object as a response.
      * @param Event $event The Event object to format
@@ -23,6 +28,7 @@ class EventFormatter
             'player' => $event->getPlayer(),
             'event_type' => $event->getEventType()->value,
             'minute' => $event->getMinute(),
+            'team' => $this->teamFormatter->formatShort($event->getTeam())
         ];
     }
 

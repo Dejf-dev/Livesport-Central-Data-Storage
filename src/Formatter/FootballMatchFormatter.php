@@ -12,6 +12,10 @@ use App\Entity\FootballMatch;
  */
 class FootballMatchFormatter
 {
+    public function __construct(
+        private readonly TeamFormatter $teamFormatter,
+    ) {}
+
     /**
      * Formats a FootballMatch object as a response.
      * @param FootballMatch $match The FootballMatch object to format
@@ -25,6 +29,8 @@ class FootballMatchFormatter
             'stadium' => $match->getStadium(),
             'score_home' => $match->getScoreHome(),
             'score_away' => $match->getScoreAway(),
+            'home_team' => $this->teamFormatter->formatShort($match->getHomeTeam()),
+            'away_team' => $this->teamFormatter->formatShort($match->getAwayTeam()),
         ];
     }
 
