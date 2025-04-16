@@ -1,0 +1,629 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Livesport Central Data Storage
+            description: Central Data Storage task for summer internship at Livesport
+            version: 1.0.0
+
+
+        tags:
+            - name: "Teams"
+              description: "Endpoints concerning the teams"
+            - name: "Football matches"
+              description: "Endpoints concerning the football matches"
+            - name: "Events"
+              description: "Endpoints concerning the events"
+
+        paths:
+            /teams:
+                get:
+                    tags: [ "Teams" ]
+                    summary: Get all teams
+                    responses:
+                        '200':
+                            description: List of teams
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                        example:
+                                            - team_id: 2
+                                              name: "Manchester City"
+                                              city: "Manchester"
+                                              founded: 1880
+                                              stadium: "Etihad Stadium"
+                                            - team_id: 3
+                                              name: "Real Madrid"
+                                              city: "Madrid"
+                                              founded: 1902
+                                              stadium: "Estadio Santiago Bernabéu"
+
+
+
+                post:
+                    tags: [ "Teams" ]
+                    summary: Create a new team
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Team'
+                    responses:
+                        '201':
+                            description: Team created
+                            content:
+                                application/json:
+                                    schema:
+                                        allOf:
+                                            - type: object
+                                              properties:
+                                                  team_id:
+                                                      type: integer
+                                                      example: 2
+                                            - $ref: '#/components/schemas/Team'
+                        '400':
+                            description: Bad request
+
+
+            /teams/{teamId}:
+                get:
+                    tags: [ "Teams" ]
+                    summary: Get a team by ID
+                    parameters:
+                        - name: teamId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 2
+                              minimum: 0
+                    responses:
+                        '200':
+                            description: Team data
+                            content:
+                                application/json:
+                                    schema:
+                                        allOf:
+                                            - type: object
+                                              properties:
+                                                  team_id:
+                                                      type: integer
+                                                      example: 2
+                                            - $ref: '#/components/schemas/Team'
+                        '404':
+                            description: Not found
+
+                put:
+                    tags: [ "Teams" ]
+                    summary: Update a team
+                    parameters:
+                        - name: teamId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 5
+                              minimum: 0
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Team2'
+                    responses:
+                        '204':
+                            description: No content
+                        '400':
+                            description: Bad request
+                        '404':
+                            description: Not found
+
+                delete:
+                    tags: [ "Teams" ]
+                    summary: Delete a team
+                    parameters:
+                        - name: teamId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 5
+                              minimum: 0
+                    responses:
+                        '204':
+                            description: No content
+                        '404':
+                            description: Not found
+
+            /matches:
+                get:
+                    tags: [ "Football matches" ]
+                    summary: Get all matches
+                    responses:
+                        '200':
+                            description: List of matches
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                        example:
+                                            - match_id: 2
+                                              stadium: "Etihad Stadium"
+                                              score_home: 3
+                                              score_away: 3
+                                              home_team:
+                                                team_id: 2
+                                                name: "Manchester City"
+                                              away_team:
+                                                team_id: 3
+                                                name: "Real Madrid"
+                                            - match_id: 3
+                                              stadium: "epet ARENA"
+                                              score_home: 3
+                                              score_away: 0
+                                              home_team:
+                                                team_id: 4
+                                                name: "AC Sparta Praha"
+                                              away_team:
+                                                team_id: 5
+                                                name: "FC Red Bull Salzburg"
+
+                post:
+                    tags: [ "Football matches" ]
+                    summary: Create a new match
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Match'
+                    responses:
+                        '201':
+                            description: Match created
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/OutputMatch'
+                        '400':
+                            description: Bad request
+
+            /matches/{matchId}:
+                get:
+                    tags: [ "Football matches" ]
+                    summary: Get a match by ID
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 2
+                              minimum: 0
+                    responses:
+                        '200':
+                            description: Match data
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        example:
+                                            - match_id: 2
+                                              stadium: "Etihad Stadium"
+                                              score_home: 3
+                                              score_away: 3
+                                              home_team:
+                                                  team_id: 2
+                                                  name: "Manchester City"
+                                              away_team:
+                                                  team_id: 3
+                                                  name: "Real Madrid"
+                        '404':
+                            description: Not found
+
+                put:
+                    tags: [ "Football matches" ]
+                    summary: Update a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 2
+                              minimum: 0
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Match'
+                    responses:
+                        '204':
+                            description: No content
+                        '400':
+                            description: Bad request
+                        '404':
+                            description: Not found
+
+                delete:
+                    tags: [ "Football matches" ]
+                    summary: Delete a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 2
+                              minimum: 0
+                    responses:
+                        '204':
+                            description: No content
+                        '404':
+                            description: Not found
+
+            /matches/{matchId}/events:
+                get:
+                    tags: [ "Events" ]
+                    summary: Get all events of a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                              minimum: 1
+                    responses:
+                        '200':
+                            description: List of events
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                        example:
+                                            - event_id: 2
+                                              player: "Cristiano Ronaldo"
+                                              event_type: "goal"
+                                              minute: 58
+                                              team:
+                                                  team_id: 3
+                                                  name: "Real Madrid"
+                                            - event_id: 3
+                                              player: "Lionel Messi"
+                                              event_type: "penalty_goal"
+                                              minute: 75
+                                              team:
+                                                  team_id: 6
+                                                  name: "Barcelona"
+                        '404':
+                            description: Not found
+
+                post:
+                    tags: [ "Events" ]
+                    summary: Create an event for a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                              minimum: 1
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Event'
+                    responses:
+                        '201':
+                            description: Event created
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/OutputEvent'
+                        '400':
+                            description: Bad request
+                        '404':
+                            description: Not found
+
+            /matches/{matchId}/events/{eventId}:
+                get:
+                    tags: [ "Events" ]
+                    summary: Get a specific event of a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                              minimum: 1
+                        - name: eventId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 4
+                              minimum: 1
+                    responses:
+                        '200':
+                            description: Event data
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/OutputEvent'
+                        '404':
+                            description: Not found
+
+                put:
+                    tags: [ "Events" ]
+                    summary: Update an event of a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                              minimum: 1
+                        - name: eventId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 4
+                              minimum: 1
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Event'
+                    responses:
+                        '204':
+                            description: No content
+                        '400':
+                            description: Bad request
+                        '404':
+                            description: Not found
+
+
+                delete:
+                    tags: [ "Events" ]
+                    summary: Delete an event of a match
+                    parameters:
+                        - name: matchId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                              minimum: 1
+                        - name: eventId
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 4
+                              minimum: 1
+                    responses:
+                        '204':
+                            description: No content
+                        '404':
+                            description: Not found
+
+        components:
+            schemas:
+                Team:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                            example: "Manchester City"
+                            minLength: 2
+                            maxLength: 100
+                            description: "Name must be between 2 and 100 characters long. It cannot be blank."
+                        city:
+                            type: string
+                            example: "Manchester"
+                            minLength: 2
+                            maxLength: 100
+                            description: "City must be between 2 and 100 characters long. It cannot be blank."
+                        founded:
+                            type: integer
+                            example: 1880
+                            minimum: 0
+                            description: "Founded year must be a positive integer or zero and not in the future. This value must be a year (positive or zero)."
+                        stadium:
+                            type: string
+                            example: "Etihad Stadium"
+                            minLength: 2
+                            maxLength: 100
+                            description: "Stadium name must be between 2 and 100 characters long. It cannot be blank."
+                    required:
+                        - name
+                        - city
+                        - founded
+                        - stadium
+
+                Team2:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                            example: "Manchester United FC"
+                            minLength: 2
+                            maxLength: 100
+                            description: "Name must be between 2 and 100 characters long. It cannot be blank."
+                        city:
+                            type: string
+                            example: "Manchester"
+                            minLength: 2
+                            maxLength: 100
+                            description: "City must be between 2 and 100 characters long. It cannot be blank."
+                        founded:
+                            type: integer
+                            example: 1878
+                            minimum: 0
+                            description: "Founded year must be a positive integer or zero and not in the future. This value must be a year (positive or zero)."
+                        stadium:
+                            type: string
+                            example: "Old Trafford"
+                            minLength: 2
+                            maxLength: 100
+                            description: "Stadium name must be between 2 and 100 characters long. It cannot be blank."
+                    required:
+                        - name
+                        - city
+                        - founded
+                        - stadium
+
+
+                Match:
+                    type: object
+                    properties:
+                        match_date:
+                            type: string
+                            format: date
+                            example: "2020-12-31"
+                            description: "The match date must follow the format `YYYY-MM-DD`. It cannot be blank."
+                        stadium:
+                            type: string
+                            example: "Wembley Stadium"
+                            minLength: 2
+                            maxLength: 100
+                            description: "The stadium name must be between 2 and 100 characters long. It cannot be blank."
+                        score_home:
+                            type: integer
+                            example: 3
+                            minimum: 0
+                            description: "The number of goals scored by the home team must be a positive integer or zero."
+                        score_away:
+                            type: integer
+                            example: 2
+                            minimum: 0
+                            description: "The number of goals scored by the away team must be a positive integer or zero."
+                        home_team_id:
+                            type: integer
+                            example: 1
+                            minimum: 1
+                            description: "The ID of the home team must be a positive integer."
+                        away_team_id:
+                            type: integer
+                            example: 3
+                            minimum: 1
+                            description: "The ID of the away team must be a positive integer."
+                    required:
+                        - match_date
+                        - stadium
+                        - score_home
+                        - score_away
+                        - home_team_id
+                        - away_team_id
+
+                OutputMatch:
+                    type: object
+                    properties:
+                        match_id:
+                            type: integer
+                            example: 1
+                        match_date:
+                            type: string
+                            format: date
+                        stadium:
+                            type: string
+                            example: "Wembley Stadium"
+                        score_home:
+                            type: integer
+                            example: 3
+                        score_away:
+                            type: integer
+                            example: 2
+                        home_team:
+                            type: object
+                            properties:
+                                team_id:
+                                    type: integer
+                                    example: 2
+                                name:
+                                    type: string
+                                    example: "Manchester City"
+                        away_team:
+                            type: object
+                            properties:
+                                team_id:
+                                    type: integer
+                                    example: 3
+                                name:
+                                    type: string
+                                    example: "Real Madrid"
+
+                Event:
+                    type: object
+                    properties:
+                        player:
+                            type: string
+                            example: "Cristiano Ronaldo"
+                            minLength: 2
+                            maxLength: 100
+                            description: "Player name must be between 2 and 100 characters"
+                        event_type:
+                            type: string
+                            example: "GOAL"
+                            enum: [GOAL, YELLOW_CARD, RED_CARD, SUBSTITUTION]
+                            description: "One of the allowed event types"
+                        minute:
+                            type: integer
+                            example: 45
+                            minimum: 0
+                            maximum: 90
+                            description: "Must be in the range 0 to 90"
+                        team_id:
+                            type: integer
+                            example: 2
+                            minimum: 1
+                            description: "Must be a positive integer (team identifier)"
+                    required:
+                        - player
+                        - event_type
+                        - minute
+                        - team_id
+
+                OutputEvent:
+                    type: object
+                    properties:
+                        event_id:
+                            type: integer
+                            example: 4
+                        player:
+                            type: string
+                            example: "Bruno Fernandes"
+                        event_type:
+                            type: string
+                            example: "penalty_miss"
+                        minute:
+                            type: integer
+                            example: 45
+                        team:
+                            type: object
+                            properties:
+                                team_id:
+                                    type: integer
+                                    example: 2
+                                name:
+                                    type: string
+                                    example: "Manchester United FC"
+
+    areas:
+        default:
+            path_patterns:
+                - ^/api(?!/doc$)
