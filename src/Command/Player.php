@@ -4,8 +4,12 @@ namespace App\Command;
 
 use App\Entity\FootballMatch;
 use App\Entity\Team;
-use function PHPSTORM_META\map;
 
+/**
+ * Class for representing Player during simulate-match command
+ *
+ * @package App\Command
+ */
 class Player
 {
     private int $cntYellowCards = 0;
@@ -64,8 +68,14 @@ class Player
         return $this->team;
     }
 
-
-
+    /**
+     * Gives some names to do simulate-match script
+     * In reality it would better have table Players and fetch names from it, but in the task we can not have table Players
+     *
+     * @param Team $homeTeam team playing as home team
+     * @param Team $awayTeam team playing as away team
+     * @return Player[] shuffled array of players
+     */
     public static function givePlayers(Team $homeTeam, Team $awayTeam): array
     {
         // would be better to use player's names from database, but we could not have table for player
@@ -92,10 +102,12 @@ class Player
     }
 
     /**
-     * @param Player[] $players
-     * @param Team $team
-     * @param bool $isOnBench
-     * @return Player
+     * Give random player from specific team
+     *
+     * @param Player[] $players all players
+     * @param Team $team team the player is playing ofr
+     * @param bool $isOnBench indicator if it should pick player who is on the bench or not
+     * @return Player found player
      */
     public static function givePlayerOnTeam(array $players, Team $team, bool $isOnBench): Player
     {

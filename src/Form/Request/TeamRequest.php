@@ -5,6 +5,11 @@ namespace App\Form\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+/**
+ * A request object for Team
+ *
+ * @package App\Form\Request
+ */
 class TeamRequest
 {
     #[Assert\NotBlank]
@@ -25,6 +30,12 @@ class TeamRequest
         maxMessage: 'Stadium has to have at most 100 characters!')]
     public string $stadium;
 
+    /**
+     * Checks if founded year is not larger than current year
+     *
+     * @param ExecutionContextInterface $context
+     * @return void
+     */
     #[Assert\Callback]
     private function validateFounded(ExecutionContextInterface $context): void
     {

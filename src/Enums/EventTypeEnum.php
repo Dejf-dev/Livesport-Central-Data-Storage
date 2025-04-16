@@ -2,6 +2,11 @@
 
 namespace App\Enums;
 
+/**
+ * Event type describing what type of event happened during match
+ *
+ * @package App\Enums
+ */
 enum EventTypeEnum: string {
     case GOAL = "goal";
     case YELLOW_CARD = "yellow_card";

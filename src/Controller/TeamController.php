@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Controller for teams
+ *
+ * @package App\Controller
+ */
 #[Route('/teams')]
 final class TeamController extends AbstractController
 {
@@ -19,6 +24,12 @@ final class TeamController extends AbstractController
         private readonly TeamFormatter $teamFormatter
     ) {}
 
+    /**
+     * Get team by team ID
+     *
+     * @param int $teamId ID of team
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{teamId}', name: 'getTeam', requirements: ['teamId' => '\d+'], methods: ['GET'])]
     public function getTeam(int $teamId): JsonResponse
     {
@@ -32,6 +43,11 @@ final class TeamController extends AbstractController
         return $this->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Get all teams
+     *
+     * @return JsonResponse the response
+     */
     #[Route(path: '', name: 'getTeams', methods: ['GET'])]
     public function getTeams(): JsonResponse
     {
@@ -41,6 +57,12 @@ final class TeamController extends AbstractController
         return $this->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new team
+     *
+     * @param Request $request the HTTP request
+     * @return JsonResponse the response
+     */
     #[Route(path: '', name: 'createTeam', methods: ['POST'])]
     public function createTeam(Request $request): JsonResponse
     {
@@ -58,6 +80,13 @@ final class TeamController extends AbstractController
         return $this->json($result, Response::HTTP_CREATED);
     }
 
+    /**
+     * Update team
+     *
+     * @param Request $request the HTTP request
+     * @param int $teamId ID of team
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{teamId}', name: 'updateTeam', requirements: ['teamId' => '\d+'], methods: ['PUT'])]
     public function updateTeam(Request $request, int $teamId): JsonResponse
     {
@@ -79,8 +108,14 @@ final class TeamController extends AbstractController
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * Delete a team
+     *
+     * @param int $teamId ID of team
+     * @return JsonResponse The response
+     */
     #[Route(path: '/{teamId}', name: 'deleteTeam', requirements: ['teamId' => '\d+'], methods: ['DELETE'])]
-    public function deleteTeam($teamId): JsonResponse
+    public function deleteTeam(int $teamId): JsonResponse
     {
         $team = $this->teamService->getTeamById($teamId);
 

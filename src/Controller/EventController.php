@@ -13,6 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Controller for events
+ *
+ * @package App\Controller
+ */
 #[Route(path: '/matches/{matchId}/events', requirements: ['matchId' => '\d+'])]
 final class EventController extends AbstractController
 {
@@ -22,6 +27,13 @@ final class EventController extends AbstractController
         private readonly FootballMatchService $footballMatchService
     ) {}
 
+    /**
+     * Get event of specific match
+     *
+     * @param int $matchId ID of match
+     * @param int $eventId ID of event
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{eventId}', name: 'getEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['GET'])]
     public function getEventOfMatch(int $matchId, int $eventId): JsonResponse
     {
@@ -36,6 +48,12 @@ final class EventController extends AbstractController
         return $this->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Get all events of specific match
+     *
+     * @param int $matchId ID of match
+     * @return JsonResponse the response
+     */
     #[Route(path: '', name: 'getEventsOfMatch', methods: ['GET'])]
     public function getEventsOfMatch(int $matchId): JsonResponse
     {
@@ -52,6 +70,13 @@ final class EventController extends AbstractController
         return $this->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new event of specific match
+     *
+     * @param Request $request the HTTP request
+     * @param int $matchId ID of match
+     * @return JsonResponse the response
+     */
     #[Route(path: '', name: 'createEventToMatch', methods: ['POST'])]
     public function createEventToMatch(Request $request, int $matchId): JsonResponse
     {
@@ -77,6 +102,14 @@ final class EventController extends AbstractController
         return $this->json($result, Response::HTTP_CREATED);
     }
 
+    /**
+     * Update event of specific match
+     *
+     * @param Request $request the HTTP request
+     * @param int $matchId ID of match
+     * @param int $eventId ID of event
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{eventId}', name: 'updateEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['PUT'])]
     public function updateEventOfMatch(Request $request, int $matchId, int $eventId): JsonResponse
     {
@@ -103,6 +136,13 @@ final class EventController extends AbstractController
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * Delete event of some specific match
+     *
+     * @param int $matchId ID of match
+     * @param int $eventId ID of event
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{eventId}', name: 'deleteEventOfMatch', requirements: ['eventId' => '\d+'], methods: ['DELETE'])]
     public function deleteEventOfMatch(int $matchId, int $eventId): JsonResponse
     {

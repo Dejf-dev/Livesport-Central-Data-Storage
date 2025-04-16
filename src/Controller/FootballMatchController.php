@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Controller for matches
+ *
+ * @package App\Controller
+ */
 #[Route('/matches')]
 final class FootballMatchController extends AbstractController
 {
@@ -19,6 +24,12 @@ final class FootballMatchController extends AbstractController
         private readonly FootballMatchFormatter $footballMatchFormatter
     ) {}
 
+    /**
+     * Get a team by team ID
+     *
+     * @param int $matchId ID of match
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{matchId}', name: 'getMatch', requirements: ['matchId' => '\d+'], methods: ['GET'])]
     public function getMatch(int $matchId): JsonResponse
     {
@@ -32,6 +43,11 @@ final class FootballMatchController extends AbstractController
         return $this->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Get all teams
+     *
+     * @return JsonResponse the response
+     */
     #[Route(path: '', name: 'getMatches', methods: ['GET'])]
     public function getMatches(): JsonResponse
     {
@@ -41,6 +57,12 @@ final class FootballMatchController extends AbstractController
         return $this->json($result, Response::HTTP_OK);
     }
 
+    /**
+     * Create a new match
+     *
+     * @param Request $request the HTTP request
+     * @return JsonResponse the response
+     */
     #[Route(path: '', name: 'createMatch', methods: ['POST'])]
     public function createMatch(Request $request): JsonResponse
     {
@@ -62,6 +84,13 @@ final class FootballMatchController extends AbstractController
         return $this->json($result, Response::HTTP_CREATED);
     }
 
+    /**
+     * Update team
+     *
+     * @param Request $request the HTTP request
+     * @param int $matchId ID of match
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{matchId}', name: 'updateMatch', requirements: ['matchId' => '\d+'], methods: ['PUT'])]
     public function updateMatch(Request $request, int $matchId): JsonResponse
     {
@@ -86,6 +115,12 @@ final class FootballMatchController extends AbstractController
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * Delete a match
+     *
+     * @param int $matchId ID of match
+     * @return JsonResponse the response
+     */
     #[Route(path: '/{matchId}', name: 'deleteMatch', requirements: ['matchId' => '\d+'], methods: ['DELETE'])]
     public function deleteMatch(int $matchId): JsonResponse
     {

@@ -11,8 +11,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Represents a Symfony form type for handling FootballMatchRequest data.
+ *
+ * @package App\Form
+ */
 class FootballMatchType extends AbstractType
 {
+    /**
+     * Builds the form.
+     *
+     * @param FormBuilderInterface $builder The form builder.
+     * @param array $options An array of options for the form.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -31,6 +42,11 @@ class FootballMatchType extends AbstractType
         ]);
     }
 
+    /**
+     * Returns the name of the associated entity class.
+     *
+     * @return string The entity class name.
+     */
     protected function getEntityName(): string
     {
         return FootballMatch::class;

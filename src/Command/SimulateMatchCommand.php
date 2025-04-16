@@ -17,6 +17,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Command for launching simulation of match script
+ *
+ * @package App\Command
+ */
 #[AsCommand(
     name: 'app:simulate-match',
     description: 'Creates a new simulated match with new created events on that match.',
@@ -31,12 +36,24 @@ class SimulateMatchCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * Configure command options
+     *
+     * @return void
+     */
     protected function configure(): void
     {
         $this->setHelp('This command allows you to create a match and it will generate some events to the same match')
              ->addArgument('cntEvents', InputArgument::OPTIONAL, 'Number of events', 2);
     }
 
+    /**
+     * Execute simulate-match script/command
+     *
+     * @param InputInterface $input input of command
+     * @param OutputInterface $output output of command
+     * @return int return code
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cntEvents = $input->getArgument('cntEvents');
@@ -89,11 +106,13 @@ class SimulateMatchCommand extends Command
     }
 
     /**
-     * @param Player[] $players
-     * @param int $cntEvents
-     * @param Team $homeTeam
-     * @param FootballMatch $match
-     * @return Event[]
+     * Generates random events, holds still all football rules to be valid football match
+     *
+     * @param Player[] $players all players
+     * @param int $cntEvents number of events to be generated, except the mandatory ones
+     * @param Team $homeTeam team which is playing at home
+     * @param FootballMatch $match match where generated events will belong to
+     * @return Event[] generated events included with mandatory ones
      */
     private function generateEvents(array $players, int $cntEvents, Team $homeTeam, FootballMatch $match): array
     {
@@ -181,6 +200,14 @@ class SimulateMatchCommand extends Command
         return $events;
     }
 
+    /**
+     * Generates the mandatory stated events which simulated match should have
+     *
+     * @param array $players all players
+     * @param Team $homeTeam team which is playing at home
+     * @param FootballMatch $match match where generated events will belong to
+     * @return Event[] generated mandatory events
+     */
     private function generateMandatoryEvents(array $players, Team $homeTeam, FootballMatch $match): array {
         $events = [];
         $rndIdx = rand(0, 22);

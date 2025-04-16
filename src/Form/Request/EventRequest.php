@@ -5,6 +5,11 @@ namespace App\Form\Request;
 use App\Enums\EventTypeEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * A request object for Event
+ *
+ * @package App\Form\Request
+ */
 class EventRequest
 {
     #[Assert\NotBlank]
@@ -30,6 +35,11 @@ class EventRequest
     #[Assert\Positive(message: 'Team ID must be positive!')]
     public int $teamId;
 
+    /**
+     * Get all values from enum EventType
+     *
+     * @return array all values from enum EventType
+     */
     private static function getPossibleEventTypeValues(): array
     {
         return array_column(EventTypeEnum::cases(), 'value');

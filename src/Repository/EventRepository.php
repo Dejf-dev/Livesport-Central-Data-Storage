@@ -8,12 +8,16 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Repository responsible for managing events and interacting with them
+ *
  * @extends ServiceEntityRepository<Event>
  *
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
  * @method Event|null findOneBy(array $criteria, array $orderBy = null)
  * @method Event[]    findAll()
  * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @package App\Repository
  */
 class EventRepository extends ServiceEntityRepository
 {
@@ -22,11 +26,23 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
+    /**
+     * Finds event by id
+     *
+     * @param int $id ID of event
+     * @return Event|null null - not available, Team - found event
+     */
     public function findById(int $id): ?Event
     {
         return $this->findOneBy(["id" => $id]);
     }
 
+    /**
+     * Finds all events by match ID
+     *
+     * @param int $matchId ID of match
+     * @return Event[] all events under specific match
+     */
     public function findAllByMatchId(int $matchId): array
     {
         $qb = $this->createQueryBuilder('e')
@@ -40,6 +56,13 @@ class EventRepository extends ServiceEntityRepository
         return $res;
     }
 
+    /**
+     * Finds event by match ID and event ID
+     *
+     * @param int $matchId ID of match
+     * @param int $eventId ID of event
+     * @return Event|null null - not available, Event - event under specific match
+     */
     public function findByMatchIdAndEventId(int $matchId, int $eventId): ?Event
     {
         $qb = $this->createQueryBuilder('e')

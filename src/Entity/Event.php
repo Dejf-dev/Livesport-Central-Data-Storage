@@ -8,6 +8,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 
+/**
+ * Event happened during the match
+ *
+ * @package App\Entity
+ */
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ORM\Table(name: 'event')]
 class Event

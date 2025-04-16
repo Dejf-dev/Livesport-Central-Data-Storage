@@ -4,6 +4,11 @@ namespace App\Form\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * A request object for FootballMatch
+ *
+ * @package App\Form\Request
+ */
 class FootballMatchRequest
 {
     #[Assert\NotBlank]

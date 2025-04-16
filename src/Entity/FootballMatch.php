@@ -7,7 +7,11 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-
+/**
+ * Football match
+ *
+ * @package App\Entity
+ */
 #[ORM\Entity(repositoryClass: FootballMatchRepository::class)]
 #[ORM\Table(name: 'match')]
 class FootballMatch
