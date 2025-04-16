@@ -19,24 +19,26 @@
 
 
 ## Available API endpoints
+#### You can also find endpoints on [http://localhost:8000/api/doc](http://localhost:8000/api/doc), if you have running app
 ### Teams
-* `GET /teams`
-* `GET /teams/{teamId}`
-* `POST /teams`
-* `PUT /teams/{teamId}`
-* `DELETE /teams/{teamId}`
+* `GET /teams` - get all teams
+* `GET /teams/{teamId}` - get specific team using ID
+* `POST /teams` - create a new team
+* `PUT /teams/{teamId}` - update a team specified by its ID
+* `DELETE /teams/{teamId}` - delete a team specified by its ID
 ### Matches
-* `GET /matches`
-* `GET /matches/{matchId}`
-* `POST /matches`
-* `PUT /matches/{matchId}`
-* `DELETE /matches/{matchId}`
+* `GET /matches` - get all matches
+* `GET /matches/{matchId}` - get specific match using ID
+* `POST /matches` - create a new match
+* `PUT /matches/{matchId}` - update a match specified by its ID
+* `DELETE /matches/{matchId}` - delete a match specified by its ID
 ### Events
-* `GET /matches/{matchId}/events`
-* `GET /matches/{matchId}/events/${eventId}`
-* `POST /matches/{matchId}/events`
-* `PUT /matches/{matchId}/events/${eventId}`
-* `DELETE /matches/{matchId}/events/${eventId}`
+* `GET /matches/{matchId}/events` - get all events of specific match
+* `GET /matches/{matchId}/events/${eventId}` - get specific event of match
+* `POST /matches/{matchId}/events` - create a new event of match
+* `PUT /matches/{matchId}/events/${eventId}` - update event of match
+* `DELETE /matches/{matchId}/events/${eventId}` - delete event of match
+
 
 ## Contact
 * If you have some problem with code, execution of the app or other stuff related with this project, you can contact me on email [ratimec.david99@gmail.com](mailto:ratimec.david99@gmail.com) and I can help you :)
