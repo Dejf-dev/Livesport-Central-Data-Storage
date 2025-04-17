@@ -15,12 +15,12 @@ class TeamRequest
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 100, minMessage: 'Name has to have at least 2 characters!',
         maxMessage: 'Name has to have at most 100 characters!')]
-    public string $name;
+    public ?string $name = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 100, minMessage: 'City has to have at least 2 characters!',
         maxMessage: 'City has to have at most 100 characters!')]
-    public string $city;
+    public ?string $city = null;
 
     #[Assert\NotNull]
     #[Assert\PositiveOrZero(message: 'Founded year must be positive or zero!')]
@@ -38,7 +38,7 @@ class TeamRequest
      * @return void
      */
     #[Assert\Callback]
-    private function validateFounded(ExecutionContextInterface $context): void
+    public function validateFounded(ExecutionContextInterface $context): void
     {
         $currentYear = (int) date('Y');
         if ($this->founded > $currentYear) {
