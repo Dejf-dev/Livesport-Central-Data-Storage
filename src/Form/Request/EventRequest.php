@@ -15,25 +15,27 @@ class EventRequest
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 100, minMessage: 'Player has to have at least 2 characters!',
         maxMessage: 'Player has to have at most 100 characters!')]
-    public string $player;
+    public ?string $player = null;
 
     #[Assert\NotBlank]
     #[Assert\Choice(
         callback: 'getPossibleEventTypeValues',
         message: "The event type is not valid!"
     )]
-    public string $eventType;
+    public ?string $eventType = null;
 
+    #[Assert\NotNull]
     #[Assert\PositiveOrZero(message: 'Minute must be positive or zero!')]
     #[Assert\Range(
         notInRangeMessage: 'Minute must be in range from 0 to 90!',
         min: 0,
         max: 90,
     )]
-    public int $minute;
+    public ?int $minute = null;
 
+    #[Assert\NotNull]
     #[Assert\Positive(message: 'Team ID must be positive!')]
-    public int $teamId;
+    public ?int $teamId = null;
 
     /**
      * Get all values from enum EventType

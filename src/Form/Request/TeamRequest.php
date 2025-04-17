@@ -22,13 +22,14 @@ class TeamRequest
         maxMessage: 'City has to have at most 100 characters!')]
     public string $city;
 
+    #[Assert\NotNull]
     #[Assert\PositiveOrZero(message: 'Founded year must be positive or zero!')]
-    public int $founded;
+    public ?int $founded = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 100, minMessage: 'Stadium has to have at least 2 characters!',
         maxMessage: 'Stadium has to have at most 100 characters!')]
-    public string $stadium;
+    public ?string $stadium = null;
 
     /**
      * Checks if founded year is not larger than current year
