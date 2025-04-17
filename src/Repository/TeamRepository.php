@@ -49,4 +49,17 @@ class TeamRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Finds IDs of all teams
+     *
+     * @return array IDs of teams
+     */
+    public function findIdsOfTeams(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->getQuery()
+            ->getResult();
+    }
 }

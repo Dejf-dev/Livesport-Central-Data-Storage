@@ -57,6 +57,16 @@ class TeamService
     }
 
     /**
+     * Get all IDs of matches
+     *
+     * @return array IDs of all teams
+     */
+    public function getAllIds(): array
+    {
+        return array_map(fn($item): int => $item["id"], $this->teamRepository->findIdsOfTeams());
+    }
+
+    /**
      * Create a new team by team request
      *
      * @param TeamRequest $request HTTP request containing information about team

@@ -59,6 +59,12 @@ class SimulateMatchCommand extends Command
         $cntEvents = $input->getArgument('cntEvents');
         $io = new SymfonyStyle($input, $output);
 
+        if ($cntEvents > 50) {
+            $io->error('Maximum events for one match is 50!');
+
+            return Command::INVALID;
+        }
+
         $this->entityManager->beginTransaction();
 
         // getting IDs of teams
@@ -78,6 +84,10 @@ class SimulateMatchCommand extends Command
         while ($homeTeamId === $awayTeamId) {
             $awayTeamId = rand(1, $cntTeams - 1);
         }
+
+        $teamIds = $this->teamService->getAllIds();
+        $homeTeamId = $teamIds[$homeTeamId];
+        $awayTeamId = $teamIds[$awayTeamId];
 
         $homeTeam = $this->teamService->getTeamById($homeTeamId);
         $awayTeam = $this->teamService->getTeamById($awayTeamId);
@@ -116,7 +126,9 @@ class SimulateMatchCommand extends Command
      */
     private function generateEvents(array $players, int $cntEvents, Team $homeTeam, FootballMatch $match): array
     {
-        $events = $this->generateMandatoryEvents($players, $homeTeam, $match);
+        $homeExcludedPlayers = 0;
+        $awayExcludedPlayers = 0;
+        $events = $this->generateMandatoryEvents($players, $homeTeam, $match, $homeExcludedPlayers, $awayExcludedPlayers);
 
         $minutes = range(0, 90);
         shuffle($minutes);
@@ -131,14 +143,16 @@ class SimulateMatchCommand extends Command
             $rndMinute = $rndMinutes[$i];
             $isPlaying = $player->getExclusionMinute() > $rndMinute && $player->getMinuteOnBench() > $rndMinute;
             $formerSize = count($events);
+            $playersToSubstitute = $player->getTeam() === $homeTeam ? $homeExcludedPlayers < 4 : $awayExcludedPlayers < 4;
 
             // yellow card
-            if ($rndEvent === EventTypeEnum::YELLOW_CARD) {
+            if ($player->getExclusionMinute() > $rndMinute && $rndEvent === EventTypeEnum::YELLOW_CARD) {
                 $player->incrementCntYellowCards();
                 $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
 
                 // won't be playing
-                if ($player->getCntYellowCards() == 2) {
+                if ($player->getCntYellowCards() >= 2) {
+                    $player->getTeam() === $homeTeam ? $homeExcludedPlayers++ : $awayExcludedPlayers++;
                     $player->setExclusionMinute($rndMinute);
                     $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
                 }
@@ -162,33 +176,34 @@ class SimulateMatchCommand extends Command
             }
 
             // red card
-            if ($isPlaying && $rndEvent === EventTypeEnum::RED_CARD) {
+            if ($player->getExclusionMinute() > $rndMinute && $rndEvent === EventTypeEnum::RED_CARD) {
+                $player->getTeam() === $homeTeam ? $homeExcludedPlayers++ : $awayExcludedPlayers++;
                 $player->setExclusionMinute($rndMinute);
                 $player->setCntYellowCards(2);
                 $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
             }
 
             // substitution out
-            if ($isPlaying && $rndEvent === EventTypeEnum::SUBSTITUTION_OUT) {
-                $sub = Player::givePlayerOnTeam($players, $player->getTeam(), true);
+            if ($playersToSubstitute && $isPlaying && $rndEvent === EventTypeEnum::SUBSTITUTION_OUT) {
+                $sub = Player::givePlayerOnTeam($players, $player->getTeam(), true, $rndMinute);
+
+                $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
+                $events[] = new Event($sub->getName(), EventTypeEnum::SUBSTITUTION_IN, $rndMinute, $sub->getTeam(), $match);
 
                 $player->setMinuteOnBench($rndMinute);
-                $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
-
                 $sub->setMinuteOnBench(91);
-                $events[] = new Event($sub->getName(), EventTypeEnum::SUBSTITUTION_IN, $rndMinute, $sub->getTeam(), $match);
             }
 
             // substitution in
-            if ($player->getMinuteOnBench() == -1 && $player->getExclusionMinute() > $rndMinute
+            if ($playersToSubstitute && $player->getMinuteOnBench() <= $rndMinute && $player->getExclusionMinute() > $rndMinute
                 && $rndEvent === EventTypeEnum::SUBSTITUTION_IN) {
-                $sub = Player::givePlayerOnTeam($players, $player->getTeam(), false);
+                $sub = Player::givePlayerOnTeam($players, $player->getTeam(), false, $rndMinute);
+
+                $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
+                $events[] = new Event($sub->getName(), EventTypeEnum::SUBSTITUTION_OUT, $rndMinute, $sub->getTeam(), $match);
 
                 $player->setMinuteOnBench(91);
-                $events[] = new Event($player->getName(), $rndEvent, $rndMinute, $player->getTeam(), $match);
-
                 $sub->setMinuteOnBench($rndMinute);
-                $events[] = new Event($sub->getName(), EventTypeEnum::SUBSTITUTION_OUT, $rndMinute, $sub->getTeam(), $match);
             }
 
             // check if new event was appended
@@ -206,9 +221,12 @@ class SimulateMatchCommand extends Command
      * @param array $players all players
      * @param Team $homeTeam team which is playing at home
      * @param FootballMatch $match match where generated events will belong to
+     * @param int $homeExcludedPlayers number of excluded players in home team
+     * @param int $awayExcludedPlayers number of excluded players in away team
      * @return Event[] generated mandatory events
      */
-    private function generateMandatoryEvents(array $players, Team $homeTeam, FootballMatch $match): array {
+    private function generateMandatoryEvents(array $players, Team $homeTeam, FootballMatch $match,
+                                             int& $homeExcludedPlayers, int& $awayExcludedPlayers): array {
         $events = [];
         $rndIdx = rand(0, 22);
         /** @var Player $player */
@@ -218,6 +236,7 @@ class SimulateMatchCommand extends Command
         // mandatory red card
         $events[] = new Event($player->getName(), EventTypeEnum::RED_CARD, $rndMinute, $player->getTeam(), $match);
         $player->setExclusionMinute($rndMinute);
+        $player->getTeam() === $homeTeam ? $homeExcludedPlayers++ : $awayExcludedPlayers++;
 
         // mandatory 3 goals
         for ($i = 0; $i < 3; $i++) {
@@ -240,6 +259,7 @@ class SimulateMatchCommand extends Command
 
         // checks if player is not already excluded
         if ($player->getExclusionMinute() > $rndMinute) {
+            $player->incrementCntYellowCards();
             $events[] = new Event($player->getName(), EventTypeEnum::YELLOW_CARD, $rndMinute, $player->getTeam(), $match);
         }
 
