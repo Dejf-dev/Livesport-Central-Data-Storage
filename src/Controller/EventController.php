@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Constants\ErrorMessages;
 use App\Entity\Event;
 use App\Form\EventType;
+use App\Form\Request\EventRequest;
 use App\Formatter\EventFormatter;
 use App\Service\EventService;
 use App\Service\FootballMatchService;
@@ -96,10 +97,18 @@ final class EventController extends AbstractController
             return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
+        /** @var EventRequest $formRequest */
         $formRequest = $form->getData();
+
+        // team in event not occurred in teams in match
+        if ($match->getHomeTeam()->getId() !== $formRequest->teamId
+            && $match->getAwayTeam()->getId() !== $formRequest->teamId) {
+            return $this->json(['errors' => ErrorMessages::EVENT_TEAM_NOT_RELATED], Response::HTTP_BAD_REQUEST);
+        }
+
         $event = $this->eventService->create($formRequest, $match);
         if ($event === null) {
-            return $this->json(['errors' => ErrorMessages::EVENT_NOT_FOUND], Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->eventFormatter->format($event);
@@ -134,6 +143,13 @@ final class EventController extends AbstractController
         }
 
         $formRequest = $form->getData();
+
+        // team in event not occurred in teams in match
+        if ($match->getHomeTeam()->getId() !== $formRequest->teamId
+            && $match->getAwayTeam()->getId() !== $formRequest->teamId) {
+            return $this->json(['errors' => ErrorMessages::EVENT_TEAM_NOT_RELATED], Response::HTTP_BAD_REQUEST);
+        }
+
         $newEvent = $this->eventService->update($formRequest, $event, $match);
 
         if ($newEvent === null) {

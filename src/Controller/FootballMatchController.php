@@ -79,7 +79,7 @@ final class FootballMatchController extends AbstractController
         $match = $this->footballMatchService->create($formRequest);
 
         if ($match === null) {
-            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->footballMatchFormatter->format($match);
