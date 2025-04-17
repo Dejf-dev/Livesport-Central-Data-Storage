@@ -578,8 +578,8 @@ nelmio_api_doc:
                             description: "Player name must be between 2 and 100 characters"
                         event_type:
                             type: string
-                            example: "GOAL"
-                            enum: [GOAL, YELLOW_CARD, RED_CARD, SUBSTITUTION]
+                            example: "goal"
+                            enum: [goal, yellow_card, red_card, own_goal, substitution_in, substitution_out, penalty_goal, penalty_miss]
                             description: "One of the allowed event types"
                         minute:
                             type: integer

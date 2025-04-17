@@ -68,7 +68,7 @@ class SimulateMatchCommand extends Command
         $this->entityManager->beginTransaction();
 
         // getting IDs of teams
-        $cntTeams = $this->teamService->getCountOfMatches();
+        $cntTeams = $this->teamService->getCountOfTeams();
 
         if ($cntTeams < 2) {
             $io->error('Not enough teams to generate matches!');

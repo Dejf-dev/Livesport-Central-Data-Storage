@@ -42,7 +42,7 @@ class EventRequest
      *
      * @return array all values from enum EventType
      */
-    private static function getPossibleEventTypeValues(): array
+    public static function getPossibleEventTypeValues(): array
     {
         return array_column(EventTypeEnum::cases(), 'value');
     }

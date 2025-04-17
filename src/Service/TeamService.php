@@ -51,7 +51,7 @@ class TeamService
      *
      * @return int count of all existing teams
      */
-    public function getCountOfMatches(): int
+    public function getCountOfTeams(): int
     {
         return $this->teamRepository->findCountOfTeams();
     }
