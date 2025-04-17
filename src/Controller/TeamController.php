@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Constants\ErrorMessages;
 use App\Form\TeamType;
 use App\Formatter\TeamFormatter;
 use App\Service\TeamService;
@@ -36,7 +37,7 @@ final class TeamController extends AbstractController
         $team = $this->teamService->getTeamById($teamId);
 
         if ($team === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->teamFormatter->format($team);
@@ -102,12 +103,12 @@ final class TeamController extends AbstractController
         $formRequest = $form->getData();
         $team = $this->teamService->getTeamById($teamId);
         if ($team === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $this->teamService->update($formRequest, $team);
 
-        return $this->json(null, Response::HTTP_NO_CONTENT);
+        return $this->json(new \stdClass(), Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -122,10 +123,10 @@ final class TeamController extends AbstractController
         $team = $this->teamService->getTeamById($teamId);
 
         if ($team === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $this->teamService->delete($team);
-        return $this->json(null, Response::HTTP_NO_CONTENT);
+        return $this->json(new \stdClass(), Response::HTTP_NO_CONTENT);
     }
 }

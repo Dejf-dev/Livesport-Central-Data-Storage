@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Constants\ErrorMessages;
 use App\Entity\Event;
 use App\Form\EventType;
 use App\Formatter\EventFormatter;
@@ -41,7 +42,9 @@ final class EventController extends AbstractController
         $event = $this->eventService->getEventByMatchIdAndEventId($matchId, $eventId);
 
         if ($match === null || $event === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            $errMsg = ['errors' => $match === null ? ErrorMessages::MATCH_NOT_FOUND : ErrorMessages::EVENT_NOT_FOUND];
+
+            return $this->json($errMsg, Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->eventFormatter->format($event);
@@ -60,7 +63,7 @@ final class EventController extends AbstractController
         $match = $this->footballMatchService->getMatchById($matchId);
 
         if ($match === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         /** @var Event[] $events */
@@ -90,13 +93,13 @@ final class EventController extends AbstractController
 
         $match = $this->footballMatchService->getMatchById($matchId);
         if ($match === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $formRequest = $form->getData();
         $event = $this->eventService->create($formRequest, $match);
         if ($event === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::EVENT_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->eventFormatter->format($event);
@@ -125,17 +128,19 @@ final class EventController extends AbstractController
         $match = $this->footballMatchService->getMatchById($matchId);
         $event = $this->eventService->getEventByMatchIdAndEventId($matchId, $eventId);
         if ($match === null || $event === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            $errMsg = ['errors' => $match === null ? ErrorMessages::MATCH_NOT_FOUND : ErrorMessages::EVENT_NOT_FOUND];
+
+            return $this->json($errMsg, Response::HTTP_NOT_FOUND);
         }
 
         $formRequest = $form->getData();
         $newEvent = $this->eventService->update($formRequest, $event, $match);
 
         if ($newEvent === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json(null, Response::HTTP_NO_CONTENT);
+        return $this->json(new \stdClass(), Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -152,11 +157,13 @@ final class EventController extends AbstractController
         $event = $this->eventService->getEventByMatchIdAndEventId($matchId, $eventId);
 
         if ($match === null || $event === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            $errMsg = ['errors' => $match === null ? ErrorMessages::MATCH_NOT_FOUND : ErrorMessages::EVENT_NOT_FOUND];
+
+            return $this->json($errMsg, Response::HTTP_NOT_FOUND);
         }
 
         $this->eventService->delete($event);
 
-        return $this->json(null, Response::HTTP_NO_CONTENT);
+        return $this->json(new \stdClass(), Response::HTTP_NO_CONTENT);
     }
 }

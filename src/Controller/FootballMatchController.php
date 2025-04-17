@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Constants\ErrorMessages;
 use App\Form\FootballMatchType;
 use App\Formatter\FootballMatchFormatter;
 use App\Service\FootballMatchService;
@@ -36,7 +37,7 @@ final class FootballMatchController extends AbstractController
         $match = $this->footballMatchService->getMatchById($matchId);
 
         if ($match === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->footballMatchFormatter->format($match);
@@ -78,7 +79,7 @@ final class FootballMatchController extends AbstractController
         $match = $this->footballMatchService->create($formRequest);
 
         if ($match === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $result = $this->footballMatchFormatter->format($match);
@@ -106,15 +107,15 @@ final class FootballMatchController extends AbstractController
         $formRequest = $form->getData();
         $match = $this->footballMatchService->getMatchById($matchId);
         if ($match === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $newMatch = $this->footballMatchService->update($formRequest, $match);
         if ($newMatch === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::TEAM_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json(null, Response::HTTP_NO_CONTENT);
+        return $this->json(new \stdClass(), Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -129,11 +130,11 @@ final class FootballMatchController extends AbstractController
         $match = $this->footballMatchService->getMatchById($matchId);
 
         if ($match === null) {
-            return $this->json(null, Response::HTTP_NOT_FOUND);
+            return $this->json(['errors' => ErrorMessages::MATCH_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $this->footballMatchService->delete($match);
 
-        return $this->json(null, Response::HTTP_NO_CONTENT);
+        return $this->json(new \stdClass(), Response::HTTP_NO_CONTENT);
     }
 }
